@@ -1,0 +1,55 @@
+---
+title: "Testing out metajam fuction"
+output: html_document
+date: "2022-08-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The metajam R package relies on the dataONE API to download data and metadata into your R Environment. It is currently supporting KNB, ADC and EDI repositories because they rely on the metadata standard EML.
+
+```{r}
+
+library(metajam)
+library(here)
+
+data_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7fc6f6db-c5ea-426a-a743-1f2edafb43b8"
+data_path <- "~/courses/eds214/api-practice"
+
+
+alaska_language <- download_d1_data(data_url = data_url, path = data_path)
+
+```
+Reading in the data now
+
+```{r}
+
+my_data <- read_d1_files("~/courses/eds214/api-practice/household_language_data/")
+
+```
+
+
+```{r}
+
+# creating a data frame from the data
+
+dataframe <- my_data$data
+
+# Write a piece of code that will compute the percentage of Alaskan household speaking only English for the year 2009 to 2015
+
+class(dataframe$Year)
+
+plot_info <- dataframe %>% 
+  group_by(Year) %>% 
+  summarize(total_new = sum(total),
+            english_speakers = sum(speak_only_english),
+            percentage = ((english_speakers / total_new) * 100)))
+
+
+plot_info_filter <- plot_info %>% 
+  filter(Year == c(2009:2015))
+  
+  
+  

@@ -1,0 +1,51 @@
+---
+title: "Plotting Discharge Time-Series"
+output: html_document
+date: "2022-08-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(dataRetrieval)
+library(tidyverse)
+library(httr)
+library(purrr)
+
+```
+
+
+```{r}
+
+# Ventura River from 2019-10-01 to 2020-10-05
+
+ventura_discharge <- readNWISdv(siteNumbers = "11118500", parameterCd = "00060", startDate = "2019-10-01", endDate = "2020-10-05") %>% 
+  rena
+
+```
+
+
+```{r}
+
+# creating a plot
+
+ventura_discharge_plot <- ggplot(data = ventura_discharge, aes(x = Date, y = X_00060_00003)) + 
+  geom_line() + 
+  labs(y = "Flow", x = "Date")
+
+
+ventura_discharge_plot
+```
+
+
+```{r}
+
+# Bonus = How would you try to determine when this stream gauge record started using the API?
+
+dataRetrieval::is_dataRetrieval_user()
+
+```
+
